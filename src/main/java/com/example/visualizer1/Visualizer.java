@@ -11,26 +11,28 @@ import javafx.stage.Stage;
 
 public class Visualizer extends Application {
     private boolean playing = false;
-    //hier neue sachen eifügen
-    Media Song = new Media(getClass().getResource("ether-disco.mp3").toExternalForm());
-    MediaPlayer Player = new MediaPlayer(Song);
+    Media song;
+    MediaPlayer player;
     @Override
     public void start(Stage stage){
-        Button b = new Button("Start");
+        Button b = new Button("START");
         Label a = new Label("Hallo Visualizer");
         VBox stack1 = new VBox(10,a,b);
+        song = new Media(getClass().getResource("ether-disco.wav").toExternalForm());
+        player = new MediaPlayer(song);
         b.setOnAction(e -> {
             if (playing == false){
+                player.play();
+                playing = true;
                 a.setText("PLAYING" + "[Songtitel]");
                 b.setText("STOP");
-                playing = true;
-                Player.play();
             }
             else {
+                player.pause();
+                playing = false;
                 a.setText("PAUSED");
                 b.setText("START");
-                playing = false;
-                Player.pause();
+
             }
         });
 
