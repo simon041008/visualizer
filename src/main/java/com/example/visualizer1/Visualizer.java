@@ -48,9 +48,9 @@ public class Visualizer extends Application {
                 double hoeheinpixel = hoehe * canvas_hight;
                 gc.fillRoundRect(
                         i * barwidth,
-                        canvas_hight - hoeheinpixel,
+                        canvas_hight - hoeheinpixel * 1.5,
                         barwidth - bardistance,
-                        hoeheinpixel,
+                        hoeheinpixel * 1.5,
                         23,
                         23);
             }
