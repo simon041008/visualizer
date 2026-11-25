@@ -24,6 +24,7 @@ public class HelloApplication extends Application {
             else {
                 a.setText("PAUSED");
                 b.setText("START");
+                playing = false;
             }
         });
 
