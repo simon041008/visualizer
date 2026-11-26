@@ -6,6 +6,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
@@ -41,9 +42,16 @@ public class Visualizer extends Application {
         Button setting = new Button("⚙");
         Button skip = new Button("▷▷");
         Button back = new Button("◁◁");
-
-
-        Label a = new Label("----------------------------------------------------Audio Visualizer --------------------------------------------------------");
+        b.setBackground(Background.fill(Color.web(bgColor)));
+        skip.setBackground(Background.fill(Color.web(bgColor)));
+        b.setTextFill(Color.WHITESMOKE);
+        skip.setTextFill(Color.WHITESMOKE);
+        back.setBackground(Background.fill(Color.web(bgColor)));
+        setting.setBackground(Background.fill(Color.web(bgColor)));
+        setting.setTextFill(Color.WHITESMOKE);
+        back.setTextFill(Color.WHITESMOKE);
+        Label a = new Label("Audio Visualizer");
+        a.resize(190,190);
         a.setTextFill(Color.WHITESMOKE);
         HBox buttons = new HBox(10,back,b,skip,setting);
         Canvas visual = new Canvas(canvas_width,canvas_hight);
