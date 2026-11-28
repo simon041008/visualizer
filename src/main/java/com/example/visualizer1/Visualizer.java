@@ -5,9 +5,12 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -129,7 +132,7 @@ public class Visualizer extends Application {
         setting.setOnAction(event -> {
 
             System.out.println("Settings hier");
-
+            OpenSettings();
 
 
         });
@@ -146,5 +149,36 @@ public class Visualizer extends Application {
     public void buttonstyle(Button b){
         b.setBackground(Background.fill(Color.web(bgColor)));
         b.setTextFill(Color.WHITESMOKE);
+    }
+
+    public void OpenSettings(){
+
+
+        //EINSTELLUNGSBUTTONS
+        CheckBox rainbowja = new CheckBox("true");
+        Slider gainSlider = new Slider(0.5, 2.0, gain);
+        VBox anzeige2 = new VBox(rainbowja,gainSlider);
+
+        rainbowja.setSelected(rainbow);
+        rainbowja.setOnAction(event -> {
+
+            if (rainbow==true) {
+                rainbow = false;
+            }
+            else {
+                rainbow = true;
+            }
+        });
+        gainSlider.valueProperty().addListener((obs, alt, neu) -> {
+            gain = neu.doubleValue();
+        });
+
+
+        Scene settingsScene = new Scene(anzeige2, 300, 400);
+        Stage settingsStage = new Stage();
+        settingsStage.setTitle("Einstellungen");
+        settingsStage.setScene(settingsScene);
+        settingsStage.show();
+
     }
 }
