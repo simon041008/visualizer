@@ -19,6 +19,8 @@ import javafx.stage.Stage;
 import java.util.Arrays;
 
 public class Visualizer extends Application {
+
+
     private boolean playing = false;
     private int canvas_hight = 300;
     private int canvas_width = 800;
@@ -30,34 +32,41 @@ public class Visualizer extends Application {
     private String bgColor = "#111111";
     private boolean rainbow = true;
     private double[] smoothing = new double[barcount];
+    private double gain = 1.2;
+
     private float barweight = 0.02F;
     private String titel = "Ether Disco";
     Media song;
     MediaPlayer player;
+
+
+
+
     @Override
     public void start(Stage stage){
 
+        //Buttons erstellen
         Button b = new Button("▷");
-        b.setTextFill(Color.BLACK);
         Button setting = new Button("⚙");
         Button skip = new Button("▷▷");
         Button back = new Button("◁◁");
-        b.setBackground(Background.fill(Color.web(bgColor)));
-        skip.setBackground(Background.fill(Color.web(bgColor)));
-        b.setTextFill(Color.WHITESMOKE);
-        skip.setTextFill(Color.WHITESMOKE);
-        back.setBackground(Background.fill(Color.web(bgColor)));
-        setting.setBackground(Background.fill(Color.web(bgColor)));
-        setting.setTextFill(Color.WHITESMOKE);
-        back.setTextFill(Color.WHITESMOKE);
+
+        //buttons designen
+        Buttonstyle(b);
+        Buttonstyle(setting);
+        Buttonstyle(skip);
+        Buttonstyle(back);
+
+
         Label a = new Label("Audio Visualizer");
-        a.resize(190,190);
         a.setTextFill(Color.WHITESMOKE);
+
+        //Layout erstellen
         HBox buttons = new HBox(10,back,b,skip,setting);
         Canvas visual = new Canvas(canvas_width,canvas_hight);
         GraphicsContext gc = visual.getGraphicsContext2D();
         VBox stack1 = new VBox(10,a,buttons, visual);
-        stack1.setStyle("-fx-background-color: #111111;");
+        stack1.setStyle("-fx-background-color: " + bgColor + ";");
 
 
 
@@ -65,35 +74,48 @@ public class Visualizer extends Application {
         player = new MediaPlayer(song);
         player.setAudioSpectrumNumBands(barcount);
         player.setAudioSpectrumListener((timestamp, duration, magnitudes, phases) -> {
+
+
             gc.setFill(Color.web(bgColor));
+
             gc.fillRect(0,0,canvas_width,canvas_hight);
-            for (int i = 0; i < barcount; i++){
-               if (rainbow == true){
-                   gc.setFill(Color.hsb(i * 360 / barcount, 0.75,1));
+            for (int i = 0; i < visiblebars; i++){       //BALKEN ZEICHNEN HIER
+
+               if (rainbow == true){    //Rainbow mode
+                   gc.setFill(Color.hsb(i * 360.0 / visiblebars, 0.75,1));
 
                }
                else {
                    gc.setFill(Color.WHITE);
                }
 
+               //SMOOTHING
                 float hoehe = Math.max(0, (magnitudes[i] + 60) / 60);
-                double hoeheinpixel = hoehe * canvas_hight;
-                if (hoeheinpixel > smoothing[i]){
-                    hoehe = hoehe - barweight;}
+                if (hoehe >= smoothing[i]){
+                    smoothing[i] = hoehe;
+                }
+                else{
+                    smoothing[i] = Math.max(smoothing[i] - barweight, hoehe);
 
+                }
+                double pixel = smoothing[i] *  canvas_hight * gain;
+
+                //ZEICHNEN
                 gc.fillRoundRect(
                         i * barwidth,
-                        canvas_hight - hoeheinpixel * 1.5,
+                        Math.min(canvas_hight - pixel, 300),
                         barwidth - bardistance,
-                        hoeheinpixel * 1.5,
-                        23,
-                        23);
-                smoothing[i] = hoeheinpixel;
-
+                        pixel * 1.5,
+                        10,
+                        10);
             }
 
         });
-        player.setAudioSpectrumInterval(0.01);
+
+        player.setAudioSpectrumInterval(0.01); //Refresh rate
+
+
+        //Play Button
         b.setOnAction(e -> {
             if (playing == false){
                 player.play();
@@ -110,11 +132,25 @@ public class Visualizer extends Application {
             }
         });
 
+        setting.setOnAction(event -> {
+
+            System.out.println("Settings hier");
+
+
+
+        });
+
+
+        //Stage
         Scene scene = new Scene(stack1, canvas_width + 80, canvas_hight + 80);
         stage.setTitle("Audio Visualizer");
 
         stage.setScene(scene);
         stage.show();
     }
-}
 
+    public void Buttonstyle(Button b){
+        b.setBackground(Background.fill(Color.web(bgColor)));
+        b.setTextFill(Color.WHITESMOKE);
+    }
+}
