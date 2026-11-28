@@ -12,11 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
-
-
-import java.util.Arrays;
 
 public class Visualizer extends Application {
 
@@ -25,16 +21,15 @@ public class Visualizer extends Application {
     private int canvas_hight = 300;
     private int canvas_width = 800;
     private double bardistance = 4.5;
-    private int barheight = 120;
     private int barcount = 32;
     private int visiblebars = barcount/2;
     private double barwidth = (double) canvas_width / visiblebars;
     private String bgColor = "#111111";
     private boolean rainbow = true;
     private double[] smoothing = new double[barcount];
-    private double gain = 1.2;
+    private double gain = 1.6;
 
-    private float barweight = 0.02F;
+    private float barweight = 0.0089F;
     private String titel = "Ether Disco";
     Media song;
     MediaPlayer player;
@@ -52,10 +47,10 @@ public class Visualizer extends Application {
         Button back = new Button("◁◁");
 
         //buttons designen
-        Buttonstyle(b);
-        Buttonstyle(setting);
-        Buttonstyle(skip);
-        Buttonstyle(back);
+        buttonstyle(b);
+        buttonstyle(setting);
+        buttonstyle(skip);
+        buttonstyle(back);
 
 
         Label a = new Label("Audio Visualizer");
@@ -98,12 +93,11 @@ public class Visualizer extends Application {
                     smoothing[i] = Math.max(smoothing[i] - barweight, hoehe);
 
                 }
-                double pixel = smoothing[i] *  canvas_hight * gain;
-
+                double pixel = Math.min(canvas_hight, smoothing[i] * canvas_hight * gain);
                 //ZEICHNEN
                 gc.fillRoundRect(
                         i * barwidth,
-                        Math.min(canvas_hight - pixel, 300),
+                        canvas_hight - pixel,
                         barwidth - bardistance,
                         pixel * 1.5,
                         10,
@@ -149,7 +143,7 @@ public class Visualizer extends Application {
         stage.show();
     }
 
-    public void Buttonstyle(Button b){
+    public void buttonstyle(Button b){
         b.setBackground(Background.fill(Color.web(bgColor)));
         b.setTextFill(Color.WHITESMOKE);
     }
